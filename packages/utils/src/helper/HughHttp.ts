@@ -7,6 +7,7 @@
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
+// @ts-ignore
 import buildURL from 'axios/lib/helpers/buildURL'
 import { HughLoading } from '../feedback/HughLoading'
 import { HughConfig } from '../config'
