@@ -19,10 +19,15 @@ interface InterceptorMethods<T> {
   use(onFulfilled?: (value: T) => T | Promise<T>, onRejected?: (error: any) => any): void
 }
 
+// 扩展 AxiosResponse 类型
+interface Response extends AxiosResponse {
+  statusCode?: number
+}
+
 // 定义拦截器的类型
 interface Interceptors {
   request: InterceptorMethods<AxiosRequestConfig>
-  response: InterceptorMethods<AxiosResponse>
+  response: InterceptorMethods<Response>
 }
 
 /**
@@ -85,7 +90,7 @@ export class HughHttp {
             dataType: 'json',
             responseType: config.responseType,
             success: (res) => {
-              const response = res as unknown as AxiosResponse
+              const response = res as unknown as Response
               resolve(response)
             },
             fail: (err) => {
