@@ -1,0 +1,19 @@
+{
+  "categories": [],
+  "documents": [
+    {
+      "name": "Utils",
+      "package": "@hairy/utils",
+      "lastUpdated": 1700718266025,
+      "docs": "/utils/",
+      "description": "工具集"
+    },
+    {
+      "name": "Vue Use",
+      "package": "@hairy/vueuse",
+      "lastUpdated": 1700718266025,
+      "docs": "/vue-use/",
+      "description": "一些封装的vue hook"
+    }
+  ]
+}

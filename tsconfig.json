@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "types": ["@dcloudio/types", "miniprogram-api-typings"],
+    "strict": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.d.ts",
+    "./**/*.tsx",
+    "./**/*.vue",
+    "types/**.d.ts",
+    "types/**/**.d.ts",
+    "./eslint.config.js"
+  ],
+  "exclude": ["**/dist/*.ts", "**/dist/*.d.ts"]
+}
