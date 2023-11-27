@@ -193,3 +193,5 @@ export class HughHttp {
     })
   }
 }
+
+export type { Response }
