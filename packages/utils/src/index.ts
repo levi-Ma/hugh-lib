@@ -6,7 +6,6 @@ export * from './enum/HughHttpStatus';
 export * from './enum/HughInputType';
 export * from './enum/HughSortType';
 export * from './feedback/HughAlert';
-export * from './feedback/HughConfirm';
 export * from './feedback/HughLoading';
 export * from './feedback/HughMessage';
 export * from './helper/HughDateTime';

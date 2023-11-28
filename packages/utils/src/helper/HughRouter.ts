@@ -16,11 +16,12 @@ export class HughRouter {
    */
   static go(url: string, param?: IJson) {
     if (param) {
-      url += '?';
-      for (const key in param) {
-        url += `${key}=${param[key]}`;
-      }
+      const keys = Object.keys(param);
+      url += keys.length
+        ? '?' + keys.map(key => `${key}=${param[key]}`).join('&')
+        : '';
     }
+
     uni.navigateTo({
       url: `/${HughConfig.routerRoot}/${url}`
     });

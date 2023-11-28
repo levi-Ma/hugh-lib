@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /
+      link: /docs/guide/
     - theme: alt
       text: View on GitHub
       link: https://github.com/levi-Ma/hugh-lib
