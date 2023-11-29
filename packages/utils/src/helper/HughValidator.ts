@@ -15,62 +15,108 @@ export class HughValidator {
 
   /**
    * ## 验证是否邮箱
-   * @param {string} str - 邮箱
-   * @returns {boolean} 是否是邮箱
+   * @param str 要判断的字符串
+   * @returns 如果是邮箱则返回 true，否则返回 false
    */
   static isEmail(str: string): boolean {
     return /^[a-zA-Z0-9]+(\.([a-zA-Z0-9]+)){0,}@[a-zA-Z0-9]+(\.([a-zA-Z0-9]+)){1,}$/.test(str);
   }
 
   /**
-   * ## 验证是否手机号里
-   * @param {string} str - 号码
-   * @returns {boolean} - 是否是手机号
+   * ## 验证是否手机号码 （最宽松，只要是1开头即可，建议手机号接受短信选择）
+   * @param str 要判断的字符串
+   * @returns 如果是电话号码则返回 true，否则返回 false
    */
   static isMobilePhone(str: string): boolean {
     return /^(\+(\d{1,4})){0,1}1[3-9](\d{9})$/.test(str);
+    // return /^(?:(?:\+|00)86)?1\d{10}$/.test(str);
   }
 
   /**
-   * ## 验证是否座机号
-   * @param {string} str - 号码
-   * @returns {boolean} - 是否是座机号
+   * ## 验证是否手机号码 （宽松，只要是13,14,15,16,17,18,19开头即可）
+   * @param str 要判断的字符串
+   * @returns 如果是电话号码则返回 true，否则返回 false
+   */
+  static isMobilePhoneLoose(str: string): boolean {
+    // return /^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(str)
+    return /^1[3-9]\d{9}$/.test(str)
+  }
+
+  /**
+   * ## 验证是否手机号码 （严谨，2023.4月手机号段）
+   * @param str 要判断的字符串
+   * @returns 如果是电话号码则返回 true，否则返回 false
+   */
+  static isMobilePhoneRigorous(str: string): boolean {
+    // [130, 131, 132, 133, 135, 136, 137, 138, 139]
+    // [145, 147, 148, 149]
+    // [150, 151, 152, 153, 155, 156, 157, 158, 159]
+    // [166, 167]
+    // [171, 172, 173, 175, 176, 177, 178]
+    // [180, 181, 182, 183, 184, 185, 186, 187, 188, 189]
+    // [190, 191, 192, 193, 195, 196, 197, 198, 199]
+    // 特殊号段：[1340-1348, 1440]
+    // 1349为卫星通讯号段
+    if (str.slice(0, 4) === '1440') {
+      return /^(?:(?:\+|00)86)?1(?:(?:44[0]))\d{7}$/.test(str)
+    }
+
+    if (str.slice(0, 2) === '14') {
+      return /^(?:(?:\+|00)86)?1(?:(?:4[5-79]))\d{8}$/.test(str)
+    }
+
+    // return /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[0-35-9]))\d{8}$/.test(str)
+    return /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[0-35-9]))\d{8}$/.test(str)
+  }
+  
+  /**
+   * ## 判断字符串是否为电话号码。
+   * 
+   * @param str 要判断的字符串
+   * @returns 如果是电话号码则返回 true，否则返回 false
+   * @example 
+   * // e.g. 0936-4211235, 89076543, 010-12345678-1234
+   * HughValidator.isTelPhone('0936-4211235'); // return true
    */
   static isTelPhone(str: string): boolean {
     return /^(((0\d{2,3})-){0,1}((\d{7,8})|(400\d{7})|(800\d{7}))(-(\d{1,4})){0,1})$/.test(str);
   }
 
   /**
-   * ## 是否是纯汉字
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否是纯汉字
+   * ## 判断字符串是否为中文。
+   * 
+   * @param str 要判断的字符串
+   * @returns 如果字符串全部由中文字符组成，则返回 true；否则返回 false。
    */
   static isChinese(str: string): boolean {
     return new RegExp(String.raw`^[${HughInputType.CHINESE}]+$`).test(str);
   }
 
   /**
-   * ## 字符串是否只包含了字母
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否只包含了字母
+   * ## 判断字符串是否只包含字母。
+   * 
+   * @param str 要检查的字符串
+   * @returns 如果字符串只包含字母，则返回 true；否则返回 false
    */
   static isOnlyLetter(str: string): boolean {
     return new RegExp(String.raw`^[${HughInputType.LETTER}]+$`).test(str);
   }
 
   /**
-   * ## 字符串是否只包含了数字
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否只包含了数字
+   * ## 判断字符串是否只包含数字和字母。
+   * 
+   * @param str 要检查的字符串
+   * @returns 如果字符串只包含数字和字母，则返回 true；否则返回 false。
    */
   static isOnlyNumberAndLetter(str: string): boolean {
     return new RegExp(String.raw`^[${HughInputType.LETTER + HughInputType.NUMBER}]+$`).test(str);
   }
-
+  
   /**
-   * ## 字符串是否是数字 正负整数小数和0
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否是数字
+   * ## 判断一个字符串是否是数字 正负整数小数和0
+   * 
+   * @param str 要判断的字符串
+   * @returns 如果字符串是数字，则返回true；否则返回false
    */
   static isNumber(str: string): boolean {
     return /^(-){0,1}[0-9]+((.)[0-9]+){0,1}$/.test(str);
@@ -78,43 +124,49 @@ export class HughValidator {
 
   /**
    * ## 字符串是否是整数
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否是整数
+   * 
+   * @param str 要判断的字符串
+   * @returns 如果字符串是整数，则返回true；否则返回false
    */
   static isInteger(str: string): boolean {
     return /^(-){0,1}[0-9]+$/.test(str);
   }
-
+  
   /**
    * ## 字符串是否是自然整数小数
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否是自然整数小数
+   * 
+   * @param str 要判断的字符串
+   * @returns 如果是自然数则返回true，否则返回false
    */
   static isNaturalNumber(str: string): boolean {
     return /^[0-9]+((.)[0-9]+){0,1}$/.test(str);
   }
 
   /**
-   * ## 字符串是否是自然整数数
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否是自然整数数
+   * ## 判断一个字符串是否为自然数。
+   * 
+   * @param str 要判断的字符串
+   * @returns 如果字符串是自然数，则返回true；否则返回false。
    */
   static isNaturalInteger(str: string): boolean {
     return /^[0-9]+$/.test(str);
   }
-
+  
   /**
-  * ## 简单身份证校验
-  * @param {string} str 字符串
-  */
+   * ## 简单身份证校验
+   * 
+   * @param str 要验证的字符串
+   * @returns 如果是简单的中国身份证号码，则返回true；否则返回false。
+   */
   static isSimpleChineseIdCard(str: string):boolean {
     return /^[0-9]{17}[\dXx]$/.test(str)
   }
-
+  
   /**
    * ## 字符串是否是合法身份证
-   * @param {string} str - 字符串
-   * @returns {boolean} - 是否是合法身份证
+   * 
+   * @param str 要验证的身份证号码
+   * @returns 如果是有效的身份证号码，则返回 true；否则返回 false
    */
   static isChineseIdCard(str: string): boolean {
     if (str.length !== 18 && str.length !== 15) {
@@ -158,27 +210,25 @@ export class HughValidator {
   }
 
   /**
-   * ## 验证是否手机号或座机号
-   * @param {string} phoneNumber - 号码
-   * @returns {boolean} 是否是手机号或座机号
+   * ## 判断给定的字符串是否为手机号码或固定电话号码。
+   * 
+   * @param phoneNumber 要验证的电话号码
+   * @returns 如果是手机号码或固定电话号码，则返回true；否则返回false。
    */
   static isTelPhoneOrMobilePhone(phoneNumber: string): boolean {
     return this.isMobilePhone(phoneNumber) || this.isTelPhone(phoneNumber);
   }
 
   /**
-   * ## 是否满足如下的规则
-   * @param {string} str - 被验证字符串
-   * @param {HughInputType} list - 验证器
-   * @returns {boolean} - 是否满足
+   * ## 验证给定字符串是否符合指定的正则表达式。
+   * 
+   * @param str 要验证的字符串
+   * @param reg 用于验证的正则表达式
+   * @returns 如果字符串符合正则表达式，则返回true；否则返回false
    */
-  static validate(str: string, ...list: HughInputType[]): boolean {
-    let regString = '';
-    for (let i = 0; i < list.length; i += 1) {
-      regString += list[i];
-    }
+  static validate(str: string, reg: RegExp): boolean {
     try {
-      return new RegExp(String.raw`^[${regString}]+$`).test(str);
+      return reg.test(str)
     } catch (e) {
       return false;
     }

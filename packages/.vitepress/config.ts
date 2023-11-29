@@ -5,11 +5,12 @@ import { MarkdownTransform } from './plugins/transform'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  head: [['link', { rel: 'icon', href: 'https://f.micecube.com/202311/2312013788283.svg', type: 'image/svg+xml' }]],
+  head: [['link', { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' }]],
   title: "Hugh Library",
   description: "Hugh Library",
+  lastUpdated: true,
   themeConfig: {
-    logo: 'https://f.micecube.com/202311/2312013788283.svg',
+    logo: '/favicon.svg',
     footer: {
       message: 'MIT Licensed',
       copyright: 'Copyright © 2019-present Evan You',

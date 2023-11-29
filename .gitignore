@@ -3,9 +3,12 @@ node_modules
 dist-ssr
 *.local
 .idea
+yarn.lock
 dist
 coverage
 output
+.turbo
 build/**
 dist/**
+.next/**
 cache

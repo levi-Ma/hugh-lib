@@ -4,14 +4,16 @@ import fs from 'fs-extra'
 import md5 from 'md5'
 import { replacer } from '../utils'
 
+
+
 export function MarkdownTransform(): Plugin {
   return {
-    name: 'hugh-md-transform',
+    name: 'hairy-md-transform',
     enforce: 'pre',
     async transform(code, id) {
       if (!id.endsWith('.md'))
         return null
-
+      
       const { footer } = await getFunctionMarkdown(id, code.length)
 
       if (footer)
@@ -23,10 +25,12 @@ export function MarkdownTransform(): Plugin {
 }
 
 export async function getFunctionMarkdown(mdPath: string, length: number) {
-  const filepath = path.join(path.dirname(mdPath), 'src/index.ts')
+  // const filepath = path.join(path.dirname(mdPath), 'src/index.ts')
+  const filepath = path.join(path.dirname(mdPath), 'dist/index.d.ts')
   const types = await getTypeDefinition(filepath)
-  let typingSection = ''
 
+  let typingSection = ''
+  
   if (types) {
     const code = `\`\`\`typescript\n${types.trim()}\n\`\`\``
     typingSection
@@ -48,7 +52,9 @@ export async function getFunctionMarkdown(mdPath: string, length: number) {
 }
 
 export async function getTypeDefinition(tsPath: string): Promise<string | undefined> {
-  const typeFilePath = path.join(process.cwd(), 'node_modules', '.cache/types', md5(tsPath))
+  // const typeFilePath = path.join(process.cwd(), 'node_modules', '.cache/types', md5(tsPath))
+  const typeFilePath = tsPath
+  
   if (!fs.existsSync(typeFilePath))
     return
   return fs.readFileSync(typeFilePath, 'utf-8')

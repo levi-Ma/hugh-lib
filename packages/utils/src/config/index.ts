@@ -33,13 +33,11 @@ export class HughConfig {
 
   /**
    * ## 静态资源根目录
-   * @description 以 '/' 结尾
    */
   static staticUrl = ''
 
   /**
    * ## 接口根路径
-   * @description 以 '/' 结尾
    */
   static apiRoot = '';
 
@@ -49,7 +47,7 @@ export class HughConfig {
   static uploadUrl = '';
 
   /**
-   * ## AccessToken对应的Key
+   * ## AccessToken对应的Key 默认为 Authorization
    */
   static authorizationHeaderKey = 'Authorization';
 

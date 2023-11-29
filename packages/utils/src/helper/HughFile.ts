@@ -44,6 +44,8 @@ export class HughFile {
     if (url.includes('https://') || url.includes('http://')) {
       return url
     }
-    return HughConfig.staticUrl + url
+    let baseURL = HughConfig.staticUrl.endsWith('/') ? HughConfig.staticUrl : `${HughConfig.staticUrl}/`
+    url = url.startsWith('/') ? url.slice(1) : url
+    return baseURL + url
   }
 }

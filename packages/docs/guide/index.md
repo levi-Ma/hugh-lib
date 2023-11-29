@@ -10,14 +10,14 @@ hugh-lib 使用 pnpm 管理的多个模块包（monorepo）的项目。
 ::: code-group
 
 ```sh [npm]
-$ npm i vitepress
+$ npm i @hugh-ma/[package-name]
 ```
 
 ```sh [pnpm]
-$ pnpm add vitepress
+$ pnpm add @hugh-ma/[package-name]
 ```
 
 ```sh [yarn]
-$ yarn add vitepress
+$ yarn add @hugh-ma/[package-name]
 ```
 :::

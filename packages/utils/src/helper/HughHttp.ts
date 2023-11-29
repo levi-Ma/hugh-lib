@@ -45,6 +45,24 @@ export class HughHttp {
   interceptors: Interceptors
 
   /**
+   * 接口根地址
+   */
+  private baseURL = HughConfig.apiRoot
+
+  /**
+   * 请求接口是否需要token
+   */
+  private authorization = false
+
+  /**
+   * # 设置请求接口是否需要token
+   */
+  setAuthorization(): this {
+    this.authorization = true
+    return this
+  }
+
+  /**
    * Loading
    */
   private loading = ''
@@ -71,12 +89,21 @@ export class HughHttp {
     url = url.startsWith('/') ? url.slice(1) : url
     return buildURL(`${baseURL}${url}`, params, paramsSerializer)
   }
-
-  constructor() {
+  
+  /**
+   * 创建一个新的 HughHttp 实例。
+   * @param baseURL - 可选的基础 URL。
+   */
+  constructor(baseURL?: string) {
     this.axiosInstance = axios.create({
-      baseURL: HughConfig.apiRoot,
+      baseURL: this.baseURL || baseURL,
       adapter: (config: AxiosRequestConfig) => {
         const { url, method, data, params, headers, baseURL, paramsSerializer } = config
+
+        if (this.authorization) {
+          headers![HughConfig.authorizationHeaderKey] = HughConfig.getAccessToken()
+        }
+        
         return new Promise((resolve, reject) => {
           if (this.loading) {
             HughLoading.show(this.loading)

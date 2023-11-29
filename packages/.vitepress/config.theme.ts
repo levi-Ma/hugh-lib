@@ -10,13 +10,21 @@ const CoreFunctions = indexes.documents.map(doc => ({
   link: doc.docs,
 }))
 
+const Use = [
+  { text: '@hugh-ma/utils', link: '/docs/use/hugh-config' },
+  { text: '@hugh-ma/vueuse', link: '/docs/use/hugh-vueuse' },
+  { text: 'HughHttp', link: '/docs/use/hugh-http' },
+]
+
 const DefaultSideBar: any[] = [
   { text: 'Guide', items: Guide },
   { text: 'Core Functions', items: CoreFunctions },
+  { text: 'Use', items: Use },
 ]
 
 export const sidebar: DefaultTheme.Sidebar = {
   '/docs/guide/': DefaultSideBar,
+  '/docs/use/': DefaultSideBar,
   ...getReduceSideBar(indexes.documents.map(v => v.docs)),
 }
 
@@ -32,6 +40,10 @@ export const nav: DefaultTheme.NavItem[] = [
   {
     text: 'Functions',
     items: CoreFunctions,
+  },
+  {
+    text: 'Use',
+    items: Use,
   },
   {
     text: 'Github',

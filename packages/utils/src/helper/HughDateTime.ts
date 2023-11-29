@@ -50,46 +50,50 @@ export class HughDateTime {
   }
 
   /**
-   * ## 从字符串或对象格式化时间
-   * @param {Date|string|number} date - Date对象/字符串/时间戳
-   * @param {string} [formatString] - [可选], 格式化模板字符串
-   */
+ * ## 从字符串或对象格式化时间
+ * @param {Date|string|number} date - Date对象/字符串/时间戳
+ * @param {string} [formatString] - [可选], 格式化模板字符串
+ */
   static formatFromDate(date: Date | string | number, formatString?: string): string {
     if (!formatString) {
       formatString = HughConfig.dateTimeFormat;
     }
 
+    let dateInstance: Date;
+
     if (typeof date === 'number') {
-      date = date.toString()
+      // 直接使用时间戳创建日期对象
+      dateInstance = new Date(date);
+    } else if (typeof date === 'string') {
+      dateInstance = new Date(date);
+      // 检查日期是否有效
+      if (isNaN(dateInstance.getTime())) {
+        throw new Error('Invalid date string format');
+      }
+    } else if (date instanceof Date) {
+      dateInstance = date;
+    } else {
+      throw new Error('Invalid date parameter');
     }
 
-    switch (typeof date) {
-      case 'string':
-        date = new Date(date);
-        break;
-      case 'object':
-        if (!(date instanceof Date)) {
-          date = new Date();
-        }
-        break;
-      default:
-    }
+    // 使用 padStart 方法来确保月份和日期的前导零
+    const pad = (n: number) => n < 10 ? '0' + n : n.toString();
 
     const dateObj: IJson = {
-      YYYY: date.getFullYear(),
-      M: date.getMonth() + 1,
-      D: date.getDate(),
-      H: date.getHours(),
-      m: date.getMinutes(),
-      s: date.getSeconds(),
-      MM: `${date.getMonth() + 101}`.substring(1),
-      DD: `${date.getDate() + 100}`.substring(1),
-      HH: `${date.getHours() + 100}`.substring(1),
-      mm: `${date.getMinutes() + 100}`.substring(1),
-      ss: `${date.getSeconds() + 100}`.substring(1)
+      YYYY: dateInstance.getFullYear().toString(),
+      M: (dateInstance.getMonth() + 1).toString(),
+      D: dateInstance.getDate().toString(),
+      H: dateInstance.getHours().toString(),
+      m: dateInstance.getMinutes().toString(),
+      s: dateInstance.getSeconds().toString(),
+      MM: pad(dateInstance.getMonth() + 1),
+      DD: pad(dateInstance.getDate()),
+      HH: pad(dateInstance.getHours()),
+      mm: pad(dateInstance.getMinutes()),
+      ss: pad(dateInstance.getSeconds())
     };
 
-    return formatString.replace(/(YYYY|MM?|DD?|HH?|ss?|mm?)/g, (key) => dateObj[key].toString());
+    return formatString.replace(/(YYYY|MM?|DD?|HH?|mm?|ss?)/g, (key) => dateObj[key]);
   }
 
   /**
@@ -117,67 +121,52 @@ export class HughDateTime {
    * @param {Date|string|number} date - Date对象/时间字符串/时间戳
    */
   static getFriendlyDateTime(date: Date | string | number): string {
-    const nowTimeStamps: number = this.toUnixMilliTime(new Date());
-    let oldTimeStamp = 0;
+    const nowTimeStamps: number = new Date().getTime();
+    let oldTimeStamp: number;
+
     if (typeof date === 'number') {
-      oldTimeStamp = parseInt((date / 1000).toString(), 10);
+      oldTimeStamp = date;
     } else {
-      oldTimeStamp = this.toUnixMilliTime(date);
+      oldTimeStamp = new Date(date).getTime();
     }
+
     const diffTimeStamp = Math.abs(nowTimeStamps - oldTimeStamp);
-    if (oldTimeStamp > nowTimeStamps) {
-      // after
-      if (diffTimeStamp > 86400 * 36500) {
-        return `${Math.floor(diffTimeStamp / 86400 / 100 / 31)}世纪后`;
-      }
-      if (diffTimeStamp > 86400 * 365) {
-        return `${Math.floor(diffTimeStamp / 86400 / 365)}年后`;
-      }
-      if (diffTimeStamp > 86400 * 31) {
-        return `${Math.floor(diffTimeStamp / 86400 / 31)}月后`;
-      }
-      if (diffTimeStamp > 86400 * 7) {
-        return `${Math.floor(diffTimeStamp / 86400 / 7)}周后`;
-      }
-      if (diffTimeStamp > 86400) {
-        return `${Math.floor(diffTimeStamp / 86400)}天后`;
-      }
-      if (diffTimeStamp > 3600) {
-        return `${Math.floor(diffTimeStamp / 3600)}小时后`;
-      }
-      if (diffTimeStamp > 60) {
-        return `${Math.floor(diffTimeStamp / 60)}分钟后`;
-      }
-      if (diffTimeStamp > 0) {
-        return `${diffTimeStamp}秒后`;
-      }
-    } else {
-      // before
-      if (diffTimeStamp > 86400 * 36500) {
-        return `${Math.floor(diffTimeStamp / 86400 / 100 / 365)}世纪前`;
-      }
-      if (diffTimeStamp > 86400 * 365) {
-        return `${Math.floor(diffTimeStamp / 86400 / 365)}年前`;
-      }
-      if (diffTimeStamp > 86400 * 30) {
-        return `${Math.floor(diffTimeStamp / 86400 / 30)}月前`;
-      }
-      if (diffTimeStamp > 86400 * 7) {
-        return `${Math.floor(diffTimeStamp / 86400 / 7)}周前`;
-      }
-      if (diffTimeStamp > 86400) {
-        return `${Math.floor(diffTimeStamp / 86400)}天前`;
-      }
-      if (diffTimeStamp > 3600) {
-        return `${Math.floor(diffTimeStamp / 3600)}小时前`;
-      }
-      if (diffTimeStamp > 60) {
-        return `${Math.floor(diffTimeStamp / 60)}分钟前`;
-      }
-      if (diffTimeStamp >= 0) {
-        return '刚刚';
-      }
+
+    // 定义一些常量来改善可读性
+    const SECOND = 1000;
+    const MINUTE = 60 * SECOND;
+    const HOUR = 60 * MINUTE;
+    const DAY = 24 * HOUR;
+    const WEEK = 7 * DAY;
+    const MONTH = 30 * DAY; // 简化计算，假设每月30天
+    const YEAR = 365 * DAY;
+    const CENTURY = 100 * YEAR;
+
+    // 计算时间差
+    if (diffTimeStamp >= CENTURY) {
+      return `${Math.floor(diffTimeStamp / CENTURY)}世纪${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
     }
-    return '未知时间';
+    if (diffTimeStamp >= YEAR) {
+      return `${Math.floor(diffTimeStamp / YEAR)}年${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    if (diffTimeStamp >= MONTH) {
+      return `${Math.floor(diffTimeStamp / MONTH)}月${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    if (diffTimeStamp >= WEEK) {
+      return `${Math.floor(diffTimeStamp / WEEK)}周${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    if (diffTimeStamp >= DAY) {
+      return `${Math.floor(diffTimeStamp / DAY)}天${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    if (diffTimeStamp >= HOUR) {
+      return `${Math.floor(diffTimeStamp / HOUR)}小时${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    if (diffTimeStamp >= MINUTE) {
+      return `${Math.floor(diffTimeStamp / MINUTE)}分钟${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    if (diffTimeStamp >= SECOND) {
+      return `${Math.floor(diffTimeStamp / SECOND)}秒${oldTimeStamp > nowTimeStamps ? '后' : '前'}`;
+    }
+    return '刚刚';
   }
 }

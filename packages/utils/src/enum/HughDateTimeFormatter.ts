@@ -9,7 +9,7 @@ export enum HughDateTimeFormatter {
    * ## 标准时间格式
    * e.g. 1970-01-01 00:00:00
    */
-  YYYY_MM_DD_HH_MM_SS = 'yyyy-MM-dd HH:mm:ss',
+  YYYY_MM_DD_HH_MM_SS = 'YYYY-MM-DD HH:mm:ss',
 
   /**
    * ## 毫秒时间戳
@@ -21,7 +21,7 @@ export enum HughDateTimeFormatter {
    * ## 月-日 时:分
    * e.g. 01-01 00:00
    */
-  MM_DD_HH_mm = 'MM-dd HH:mm',
+  MM_DD_HH_mm = 'MM-DD HH:mm',
   
   /**
    * ## 年-月-日

@@ -6,7 +6,7 @@ hero:
   name: "Hugh Library"
   text: "工具集"
   tagline: 前端基建（？大概吧）
-  image: https://i.micecube.com/202311/2313145052541.png
+  image: /logo.png
   alt: Hugh Library
   actions:
     - theme: brand

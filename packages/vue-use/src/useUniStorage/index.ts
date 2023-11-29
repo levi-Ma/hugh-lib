@@ -3,8 +3,8 @@ import { shallowRef, unref, watch } from "vue";
 /**
  * useUniStorage
  * @description: 一个封装 uniStorage 的缓存方法
- * @param key - [string] 缓存数组的key
- * @param initialValue - [any] 缓存数组的初始值
+ * @param key - [string] 缓存对象的 key
+ * @param initialValue - any 缓存对象的初始值
  */
 export function useUniStorage(key: string, initialValue: any) {
   // 统一处理通过 try catch 捕获到的错误

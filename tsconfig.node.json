@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "jsx": "preserve",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "rootDir": ".",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "strict": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "esModuleInterop": true
+  },
+  "exclude": [
+    "**/__tests__/*.ts",
+    "**/__test__/*.ts",
+    "./dist"
+  ]
+}
