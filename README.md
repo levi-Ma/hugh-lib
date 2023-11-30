@@ -2,8 +2,6 @@
 > uni-app-vue的monorepo仓库
 
 ## 子仓库
-### docs vitepress
-
 ### utils 工具库
 
 ```bash
@@ -12,12 +10,9 @@
 ├─ feedback 交互反馈
 ├─ enum 枚举
 ├─ helper 方法类
-├─ interface 类型定义
-└─ types 类型解释文件
+└─ interface 类型定义
 ```
-
 ### vue-use vue hooks
-
 ```bash
 @hugh/vueuse
 ├─ useCheckUpdate 微信小程序检查版本更新
