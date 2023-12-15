@@ -4,14 +4,14 @@
 		{
 			"name": "Utils",
 			"package": "@hugh-ma/utils",
-			"lastUpdated": 1701141159000,
+			"lastUpdated": 1701312016000,
 			"docs": "/utils/",
 			"description": "工具集"
 		},
 		{
 			"name": "vue-use",
 			"package": "@hugh-ma/vueuse",
-			"lastUpdated": 1701067654000,
+			"lastUpdated": 1701312016000,
 			"docs": "/vue-use/",
 			"description": "Vue Hook 函数集"
 		}

@@ -1,7 +1,7 @@
 # 使用
 
 ### @hugh-ma/utils
-安装之后，需要在 `main.ts` 中设置一些必要的参数，`HughConfig` 中所有的属性都可以替换，按照项目来设置就可以
+安装之后，需要在 `main.ts` 中设置一些必要的参数，按照项目来设置就可以
 
 ### Usage Functions
 ~~~typescript

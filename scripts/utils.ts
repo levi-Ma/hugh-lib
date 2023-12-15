@@ -1,13 +1,12 @@
 import { resolve } from 'node:path'
-import path from 'path';
-import { fileURLToPath } from 'url';
-import type { Options } from 'fast-glob'
 import fg from 'fast-glob'
 import { format } from 'prettier'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import type { Options } from 'fast-glob'
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const __dirname = dirname(__filename);
 export const dirSrc = resolve(__dirname, '../packages')
 
 export async function listFunctionMds(dir: string, options?: Options) {

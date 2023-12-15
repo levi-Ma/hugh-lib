@@ -47,7 +47,7 @@ export async function updateIndexes() {
 
         let { content, data: frontmatter } = matter(await fs.readFile(mdPath, 'utf-8'))
 
-        const doc: HairyDocument = {
+        const doc: HughMaDocument = {
           name: '',
           package: await getPackageName(dir),
           function: fs.existsSync(mdPath.replace('.md', '.ts')) ? tsPath : undefined,

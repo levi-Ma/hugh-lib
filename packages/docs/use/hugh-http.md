@@ -44,7 +44,7 @@
   // 添加响应拦截器
   uniHttp.interceptors.response.use(
     (response) => {
-      return response
+      return response.data
     },
     (error) => {
       console.log('response', error)
@@ -79,6 +79,108 @@
       return uniHttp.setLoading('Loading文案').setAuthorization().get('call')
     }
   }
+
+  export default new ApiHttp()
+  ~~~
++ 在页面中使用
+  ~~~typescript
+  import http from "@/api"
+
+  function getTest() {
+    http.test().then(res => {
+      // ....
+    })
+  }
+  ~~~
++ 类型填充
+
+  先来看一下 `AxiosResponse` 和 `HughHttp` 中 `get` 方法的类型定义
+  ~~~typescript
+  /**
+   * axios response
+   */
+  export interface AxiosResponse<T = any, D = any>  {
+    data: T;
+    status: number;
+    statusText: string;
+    headers: AxiosResponseHeaders;
+    config: AxiosRequestConfig<D>;
+    request?: any;
+  }
+
+  /**
+   * get请求
+   * @param {string} url - 用于请求的服务器 URL
+   * @param {AxiosRequestConfig} config - 请求配置
+   * @returns {Promise<T>} A promise that resolves with the response data
+   */
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  ~~~
+  泛型 `T` 只针对于 `AxiosResponse` 中的 `data`，但服务器返回的数据不会直接在 `data` 中返回，所以需要扩展一下 `T` 类型，`HughHttp` 中 `get` 的 泛型 `T` 就是 `AxiosResponse` 中的泛型 `T`
+  
+  在 `src` 目录下新建 `types` 文件夹并新建 `common.d.ts`（存放公共类型）, `api.d.ts`（存放接口类型） 文件
+  ~~~typescript
+  // common.d.ts
+  // 假设服务器返回的数据是 data = { code, result, msg }
+  // 我们先按照这个对象规定类型的形状，其中 T 为泛型接口，为后期约束 result 的类型形状提供接口
+  interface CommonResponse<T> {
+    code: number;
+    result: T;
+    msg: string;
+  }
+
+  // api.d.ts
+  // 先定义从test接口获取到的数据类型
+  // 假设返回的数据是 { code: 200, result: { id: 1, name: 'demo', age: 18, sex: 1 }, msg: 'success' }
+  // 规定类型形状
+  interface ITest {
+    id: number
+    name: string
+    age: number
+    sex: number
+  }
+  ~~~
+  在请求方法中使用
+  ~~~ typescript
+  // api/index.ts
+  // 使用 CommonResponse 类型
+  class ApiHttp {
+    // 然后将 ITest 作为类型参数传入 CommonResponse 的泛型接口中
+    interface() {
+      return uniHttp.get<CommonResponse<ITest>>('test')
+    }
+  }
+  ~~~
+  在vue文件中使用，res
+  ~~~ vue
+  <script lang="ts" setup>
+  import http from "@/api"
+
+  const data = ref<ITest>()
+
+  function getTest() {
+    http.interface().then(res => {
+      // res (parameter) res: CommonResponse<ITest>
+      // res.code (property) CommonResponse<ITest>.code: number
+      // res.result (property) CommonResponse<ITest>.result: ITest
+      // res.result.id (property) ITest.id: number
+      // res.result.name (property) ITest.name: string
+      // res.result.age (property) ITest.age: number
+      // res.result.sex (property) ITest.sex: number
+      // res.msg (property) CommonResponse<ITest>.msg: string
+      data.value = res.result;
+    })
+  }
+  </script>
+
+  <template>
+    <view>
+      <view>id: {{data?.id}}</view>
+      <view>name: {{data?.name}}</view>
+      <view>age: {{data?.age}}</view>
+      <view>sex: {{data?.sex}}</view>
+    </view>
+  </template>
   ~~~
 ### Type Declarations
 ~~~typescript
